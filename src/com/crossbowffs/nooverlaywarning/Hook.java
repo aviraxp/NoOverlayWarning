@@ -9,11 +9,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class Hook implements IXposedHookLoadPackage {
     private static final String TAG = "NoOverlayWarning";
-    private static final String[] INSTALLER_PACKAGE_NAMES = {
-        "com.android.packageinstaller",        // Pre-Marshmallow
-        "com.google.android.packageinstaller", // Marshmallow
-        "com.mokee.packageinstaller"           // MoKee
-    };
     private static final int FLAG_WINDOW_IS_PARTIALLY_OBSCURED = 0x2;
 
     private static boolean arrayContains(String[] array, String value) {
@@ -27,9 +22,6 @@ public class Hook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (!arrayContains(INSTALLER_PACKAGE_NAMES, lpparam.packageName)) {
-            return;
-        }
 
         XposedHelpers.findAndHookMethod(MotionEvent.class, "getFlags", new XC_MethodHook() {
             @Override
